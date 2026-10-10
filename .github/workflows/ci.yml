@@ -1,0 +1,163 @@
+name: HollaEx QA
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  lint-typecheck:
+    name: Lint + Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+
+  public-api:
+    name: Public API contract + performance + security
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run public-api project
+        env:
+          HOLLAEX_ENV: production-readonly
+          PUBLIC_API_BASE_URL: https://api.hollaex.com
+        run: npx playwright test --project=public-api --reporter=list,github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-public-api
+          path: playwright-report/public-api
+
+  public-ui:
+    name: Public UI smoke + responsive + accessibility
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Run public-ui project
+        env:
+          HOLLAEX_ENV: production-readonly
+          PUBLIC_BASE_URL: https://pro.hollaex.com
+        run: npx playwright test --project=public-ui --reporter=list,github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-public-ui
+          path: playwright-report/public-ui
+
+  cross-browser:
+    name: Cross-browser smoke
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Run cross-browser
+        env:
+          HOLLAEX_ENV: production-readonly
+        run: npx playwright test --project=cross-browser --reporter=list,github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-cross-browser
+          path: playwright-report/cross-browser
+
+  accessibility:
+    name: Accessibility (axe-core WCAG-A)
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Install axe-core
+        run: npm install --no-save @axe-core/playwright
+      - name: Run accessibility project
+        env:
+          HOLLAEX_ENV: production-readonly
+        run: npx playwright test --project=accessibility --reporter=list,github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-accessibility
+          path: playwright-report/accessibility
+
+  security:
+    name: Security sweep
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run security project
+        env:
+          HOLLAEX_ENV: production-readonly
+        run: npx playwright test --project=security --reporter=list,github
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-security
+          path: playwright-report/security
+
+  local:
+    name: Local Kit (full integration)
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'local-kit')
+    runs-on: ubuntu-latest
+    needs: lint-typecheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Bring up local HollaEx Kit
+        env:
+          ACTIVATION_CODE: ${{ secrets.HOLLAEX_ACTIVATION_CODE }}
+          ADMIN_PASSWORD: ${{ secrets.HOLLAEX_ADMIN_PASSWORD }}
+        run: |
+          git clone --depth 1 -b v2.5.2 https://github.com/hongmin78/hollaex-kit.git /tmp/hollaex-kit
+          cd /tmp/hollaex-kit/server
+          cp tools/hollaex-kit.env.local.example tools/hollaex-kit.env.local
+          sed -i "s|^ACTIVATION_CODE=.*|ACTIVATION_CODE=${ACTIVATION_CODE}|" tools/hollaex-kit.env.local
+          sed -i "s|^ADMIN_PASSWORD=.*|ADMIN_PASSWORD=${ADMIN_PASSWORD}|" tools/hollaex-kit.env.local
+          sed -i "s|^NODE_ENV=.*|NODE_ENV=development|" tools/hollaex-kit.env.local
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-local
+          path: playwright-report/local-*

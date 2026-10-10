@@ -1,0 +1,32 @@
+{
+  "btc-usdt": {
+    "symbol": "btc-usdt",
+    "open": 80921.1,
+    "close": 82714.61,
+    "high": 83423.9,
+    "low": 80921.1,
+    "last": 82714.61,
+    "volume": 13.43,
+    "time": "2026-10-09T17:33:14.460Z"
+  },
+  "eth-usdt": {
+    "symbol": "eth-usdt",
+    "open": 2500.5,
+    "close": 2486.69,
+    "high": 2510.2,
+    "low": 2470.1,
+    "last": 2486.69,
+    "volume": 425.7,
+    "time": "2026-10-09T17:33:14.460Z"
+  },
+  "xht-usdt": {
+    "symbol": "xht-usdt",
+    "open": 0.2385,
+    "close": 0.2437,
+    "high": 0.2474,
+    "low": 0.2363,
+    "last": 0.2437,
+    "volume": 336975,
+    "time": "2026-10-09T17:33:14.460Z"
+  }
+}

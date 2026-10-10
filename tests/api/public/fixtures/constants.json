@@ -1,0 +1,106 @@
+{
+  "coins": {
+    "xht": {
+      "id": 9,
+      "fullname": "HollaEx",
+      "symbol": "xht",
+      "active": true,
+      "verified": true,
+      "allow_deposit": true,
+      "allow_withdrawal": true,
+      "withdrawal_fee": 0.01,
+      "min": 0.1,
+      "max": 10000000,
+      "increment_unit": 0.01,
+      "logo": "https://resources.hollaex.com/icons/xht.svg",
+      "code": "xht",
+      "is_public": true
+    },
+    "btc": {
+      "id": 2,
+      "fullname": "Bitcoin",
+      "symbol": "btc",
+      "active": true,
+      "verified": true,
+      "allow_deposit": true,
+      "allow_withdrawal": true,
+      "withdrawal_fee": 0.0005,
+      "min": 0.0001,
+      "max": 100,
+      "increment_unit": 0.00001,
+      "logo": "https://resources.hollaex.com/icons/btc.svg",
+      "code": "btc",
+      "is_public": true,
+      "estimated_price": 82721.61
+    },
+    "eth": {
+      "id": 3,
+      "fullname": "Ethereum",
+      "symbol": "eth",
+      "active": true,
+      "verified": true,
+      "allow_deposit": true,
+      "allow_withdrawal": true,
+      "withdrawal_fee": 0.005,
+      "min": 0.001,
+      "max": 1000,
+      "increment_unit": 0.001,
+      "logo": "https://resources.hollaex.com/icons/eth.svg",
+      "code": "eth",
+      "is_public": true,
+      "estimated_price": 2486.69
+    },
+    "usdt": {
+      "id": 4,
+      "fullname": "Tether USD",
+      "symbol": "usdt",
+      "active": true,
+      "verified": true,
+      "allow_deposit": true,
+      "allow_withdrawal": true,
+      "withdrawal_fee": 1,
+      "min": 1,
+      "max": 10000000,
+      "increment_unit": 0.01,
+      "logo": "https://resources.hollaex.com/icons/usdt.svg",
+      "code": "usdt",
+      "is_public": true,
+      "estimated_price": 1
+    }
+  },
+  "pairs": {
+    "xht-usdt": {
+      "id": 1,
+      "name": "XHT/USDT",
+      "symbol": "xht-usdt",
+      "base": "xht",
+      "quote": "usdt",
+      "active": true,
+      "is_public": true,
+      "taker_fee": 0.001,
+      "maker_fee": 0.001,
+      "min_size": 0.01,
+      "max_size": 1000000,
+      "min_price": 0.0001,
+      "max_price": 10000
+    },
+    "btc-usdt": {
+      "id": 12,
+      "name": "BTC/USDT",
+      "symbol": "btc-usdt",
+      "base": "btc",
+      "quote": "usdt",
+      "active": true,
+      "is_public": true
+    },
+    "eth-usdt": {
+      "id": 13,
+      "name": "ETH/USDT",
+      "symbol": "eth-usdt",
+      "base": "eth",
+      "quote": "usdt",
+      "active": true,
+      "is_public": true
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "1": {
+    "id": 1,
+    "name": "Silver",
+    "icon": "silver.png",
+    "description": "Default tier for verified users.",
+    "fees": {
+      "maker": { "btc-usdt": 0.002, "eth-usdt": 0.002, "xht-usdt": 0.002 },
+      "taker": { "btc-usdt": 0.002, "eth-usdt": 0.002, "xht-usdt": 0.002 }
+    },
+    "deposit_limit": 10000,
+    "withdrawal_limit": 5000,
+    "native_currency_limit": 100000,
+    "note": "Default tier"
+  },
+  "2": {
+    "id": 2,
+    "name": "Ruby",
+    "icon": "ruby.png",
+    "description": "Higher limits and reduced fees.",
+    "fees": {
+      "maker": { "btc-usdt": 0.0014, "eth-usdt": 0.0014, "xht-usdt": 0.0014 },
+      "taker": { "btc-usdt": 0.0018, "eth-usdt": 0.0018, "xht-usdt": 0.0018 }
+    },
+    "deposit_limit": 50000,
+    "withdrawal_limit": 20000
+  },
+  "3": {
+    "id": 3,
+    "name": "Diamond",
+    "icon": "diamond.png",
+    "description": "Premium tier for active traders.",
+    "fees": {
+      "maker": { "btc-usdt": 0.001, "eth-usdt": 0.001, "xht-usdt": 0.001 },
+      "taker": { "btc-usdt": 0.0015, "eth-usdt": 0.0015, "xht-usdt": 0.0015 }
+    },
+    "deposit_limit": 250000,
+    "withdrawal_limit": 100000
+  }
+}

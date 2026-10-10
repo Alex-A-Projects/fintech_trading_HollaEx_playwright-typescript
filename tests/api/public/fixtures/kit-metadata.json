@@ -1,0 +1,54 @@
+{
+  "apps": {},
+  "color": {
+    "primary": "#000000",
+    "secondary": "#FFFFFF"
+  },
+  "icons": {},
+  "links": {
+    "docs": "https://docs.hollaex.com",
+    "api_docs": "https://apidocs.hollaex.com"
+  },
+  "title": "HollaEx",
+  "domain": "pro.hollaex.com",
+  "onramp": true,
+  "captcha": false,
+  "offramp": true,
+  "strings": {},
+  "api_name": "hollaex",
+  "defaults": {},
+  "features": {
+    "pro_trade": true,
+    "fiat_deposit": true,
+    "fiat_withdrawal": true,
+    "otc_trade": true
+  },
+  "info": {
+    "name": "hollaex",
+    "active": true,
+    "exchange_id": 22,
+    "user_id": 168,
+    "url": "https://api.hollaex.com",
+    "is_trial": false,
+    "created_at": "2019-10-01T11:22:09.663Z",
+    "expiry": "2029-09-19T15:00:00.000Z",
+    "collateral_level": "member",
+    "type": "Cloud",
+    "plan": "fiat",
+    "period": "year",
+    "is_isolated": false,
+    "status": true,
+    "initialized": true
+  },
+  "description": "HollaEx",
+  "interface": {
+    "theme": "dark",
+    "primary_color": "#000000"
+  },
+  "timezone": "UTC",
+  "fiat_fees": {},
+  "user_meta": {},
+  "logo_image": "",
+  "user_payments": {},
+  "setup_completed": true
+}

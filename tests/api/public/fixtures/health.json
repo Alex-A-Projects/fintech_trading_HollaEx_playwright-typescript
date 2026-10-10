@@ -1,0 +1,8 @@
+{
+  "name": "HollaEx",
+  "version": "2.20.1",
+  "host": "https://api.hollaex.com",
+  "domain": "https://pro.hollaex.com",
+  "basePath": "/v2",
+  "uptime": 68195
+}

@@ -1,0 +1,65 @@
+{
+  "name": "hollaex-qa-automation",
+  "version": "1.0.0",
+  "description": "Comprehensive QA automation framework for the HollaEx cryptocurrency exchange. Covers public UI, REST API, PostgreSQL database, end-to-end integration, accessibility, and cross-browser testing with Playwright + TypeScript.",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "install:browsers": "playwright install --with-deps chromium firefox webkit",
+    "lint": "eslint \"**/*.{ts,tsx,js}\" --max-warnings 0",
+    "lint:fix": "eslint \"**/*.{ts,tsx,js}\" --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:ui": "playwright test --project=public-ui",
+    "test:api": "playwright test --project=public-api",
+    "test:db": "playwright test --project=local-db",
+    "test:e2e": "playwright test --project=local-e2e",
+    "test:accessibility": "playwright test --project=accessibility",
+    "test:cross-browser": "playwright test --project=cross-browser",
+    "test:report": "playwright show-report",
+    "test:report:allure:generate": "allure generate allure-results --clean -o allure-report",
+    "test:report:allure:open": "allure open allure-report",
+    "clean": "rm -rf test-results playwright-report allure-results allure-report"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "qa-automation",
+    "sdet",
+    "hollaex",
+    "cryptocurrency",
+    "exchange",
+    "rest-api",
+    "postgresql",
+    "page-object-model"
+  ],
+  "author": "QA Automation Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.48.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.16.5",
+    "@types/pg": "^8.11.10",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "allure-commandline": "^2.15.0",
+    "allure-playwright": "^3.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pg": "^8.13.0"
+  }
+}
