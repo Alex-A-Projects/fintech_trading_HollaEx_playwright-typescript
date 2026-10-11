@@ -8,7 +8,6 @@
  *
  *     import { test, expect } from '@fixtures/api.fixture';
  */
-export type { UiFixtures } from './ui.fixture';
 export type { ApiFixtures } from './api.fixture';
 export type { DbFixtures } from './db.fixture';
 export type { AuthFixtures } from './auth.fixture';
