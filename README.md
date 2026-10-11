@@ -1,9 +1,8 @@
 # HollaEx QA Automation
 
-> Production-grade QA automation framework for the **HollaEx** cryptocurrency
-> exchange. Built with **Playwright + TypeScript**, covering public UI,
-> REST API, PostgreSQL database, accessibility, security, performance, and
-> end-to-end integration scenarios.
+> QA automation framework for the **HollaEx** cryptocurrency exchange.
+> Built with **Playwright + TypeScript**, covering REST API,
+> PostgreSQL database, and security surfaces.
 
 [![TypeScript](https://img.shields.io/badge/typescript-5.6-blue)](https://www.typescriptlang.org/)
 [![Playwright](https://img.shields.io/badge/playwright-1.48-green)](https://playwright.dev/)
@@ -15,13 +14,11 @@
 
 | Layer | Tool | Why |
 |---|---|---|
-| **Language** | TypeScript 5.6 (strict mode) | Type-safe page objects, fixtures, and API clients; `tsc --noEmit` runs in CI. |
-| **Test runner** | [Playwright Test](https://playwright.dev/) 1.48 | Single runner for UI, REST API, and database scenarios; built-in fixtures, parallel workers, retries, traces, video, screenshots. |
-| **Browsers** | Chromium, Firefox, WebKit | Cross-browser smoke via Playwright's bundled browsers. |
+| **Language** | TypeScript 5.6 (strict mode) | Type-safe API clients, fixtures, and DB queries; `tsc --noEmit` runs in CI. |
+| **Test runner** | [Playwright Test](https://playwright.dev/) 1.48 | Single runner for REST API and database scenarios; built-in fixtures, parallel workers, retries, traces. |
 | **API transport** | `playwright.request` + `fetch()` | Plays nicely with the test runner; native retries, abort signals, JSON parsing. |
 | **Schema validation** | [Zod](https://zod.dev/) 3.23 | Every fixture-backed API response is parsed against a typed schema; `safeParse` keeps the suite green on shape drift. |
 | **Database** | [pg](https://node-postgres.com/) 8.13 (PostgreSQL 10+) | Parameterised queries; `readOnly` guard rejects writes before they reach the wire. |
-| **Accessibility** | [axe-core/playwright](https://www.npmjs.com/package/@axe-core/playwright) 4.13 | Runs axe-core scans against the live DOM (WCAG-A and WCAG-AA). |
 | **Local secrets** | [dotenv](https://github.com/motdotla/dotenv) 16 | `.env` is git-ignored; `.env.example` documents safe defaults. |
 | **Lint / format** | ESLint 8 + Prettier 3 | `--max-warnings 0` in CI. |
 | **HTML report** | Playwright HTML | One folder per project (`playwright-report/<project>`). |
@@ -36,31 +33,23 @@
 git clone <this repo>
 cd hollaex-qa-automation
 npm ci
-npm run install:browsers
 cp .env.example .env
 # edit .env (defaults to public production-readonly — safe out of the box)
 
-# Public surface (smoke + API + accessibility + security + perf)
+# Public surface (API + DB + security)
 npm run test:smoke         # only @smoke tests
-npm run test:api           # only API tests
+npm run test:api           # only public API tests
 npm run test               # everything in production-readonly mode
 npm run test:report        # HTML report
 npm run test:report:allure:generate
 
-# Cross-browser smoke under Chromium / Firefox / WebKit
-npm run test:cross-browser
-
 # Local Kit (optional, requires a running HollaEx Kit — see docker/README.md)
 HOLLAEX_ENV=local LOCAL_API_BASE_URL=http://localhost:10010 npm run test:api -- --project=local-auth
-HOLLAEX_ENV=local LOCAL_API_BASE_URL=http://localhost:10010 npm run test:e2e
+HOLLAEX_ENV=local LOCAL_API_BASE_URL=http://localhost:10010 npm run test:db
 ```
 
 ## What's covered
 
-- **Public UI** — verified against the only reliably navigable route,
-  `https://pro.hollaex.com/`. Includes responsive viewports, manifest
-  fallback, accessibility, and surface hardening (404 expected on
-  routes the production server hasn't enabled).
 - **Public REST API** — every documented endpoint in
   [`/config/endpoints.ts`](config/endpoints.ts) is exercised with Zod
   schema validation, semantic assertions, performance budgets, and
@@ -74,8 +63,12 @@ HOLLAEX_ENV=local LOCAL_API_BASE_URL=http://localhost:10010 npm run test:e2e
 - **Authenticated flows** — HMAC-signed `GET/POST/DELETE` against
   `/v2/user`, `/v2/order`, etc. Tests self-skip on
   `production-readonly`.
-- **End-to-end** — UI + API + database scenarios that exercise
-  paired happy-path and rejection paths.
+
+> **Note:** Browser-based UI and accessibility tests were removed; this
+> framework now exercises only API, database, and security surfaces.
+> The framework still ships Playwright as the runner because
+> `playwright.request` is the cleanest way to drive REST contract
+> tests in TS.
 
 See `docs/requirements-traceability-matrix.md` for the canonical
 mapping.
@@ -84,22 +77,18 @@ mapping.
 
 ```
 config/                Single source of truth for env, endpoints, test data
-pages/                 Thin Page Object Model (selectors only, no assertions)
 api/
   clients/             Typed HTTP/REST clients built on Playwright
   schemas/             Zod schemas for every documented endpoint
 database/              PostgreSQL pool + schema queries + validators
-fixtures/              Per-layer fixtures (UI, API, DB, Auth)
+fixtures/              Per-layer fixtures (API, DB, Auth)
 tests/
-  ui/                  Public SPA shell tests + responsive
   api/public/          Live public API contract tests
   api/auth/            HMAC-signed auth tests
   api/wallet/          Authenticated wallet tests
   api/trading/         Order placement / cancellation
   database/            Schema + ledger + parameterised-query safety
-  integration/         UI + API + DB scenarios
   security/            XSS / SQLi / oversized / CORS / method sweep
-  accessibility/       axe-core WCAG-A on the SPA shell
 utils/                 Logger, dataFactory, helpers, custom assertions
 docker/                Local Kit bring-up reference (not run by the framework)
 docs/                  Discovery, plan, strategy, RTM, coverage, limitations
@@ -125,9 +114,9 @@ This framework *cannot* run destructive tests against production.
 | Var                       | Default                                  | Purpose |
 |---------------------------|------------------------------------------|---------|
 | `HOLLAEX_ENV`             | `production-readonly`                    | Determines target environment |
-| `PUBLIC_BASE_URL`         | `https://pro.hollaex.com`                | UI smoke target |
+| `PUBLIC_BASE_URL`         | `https://pro.hollaex.com`                | (unused — kept for backwards compatibility with future UI projects) |
 | `PUBLIC_API_BASE_URL`     | `https://api.hollaex.com`                | Public API target |
-| `LOCAL_BASE_URL`          | `http://localhost:3000`                  | Local Kit UI |
+| `LOCAL_BASE_URL`          | `http://localhost:3000`                  | Local Kit UI (not exercised) |
 | `LOCAL_API_BASE_URL`      | `http://localhost:10010`                 | Local Kit API |
 | `LOCAL_DB_HOST/PORT/NAME/USER/PASSWORD` | `localhost/5432/hollaex/admin/root` | Local Kit Postgres |
 | `TEST_USER_EMAIL`         | —                                        | Pre-provisioned test user (local) |
@@ -154,7 +143,7 @@ cd server && docker compose up -d
 
 # 3. Run the local projects
 npm run test:db
-npm run test:e2e
+HOLLAEX_ENV=local npm run test:api -- --project=local-auth
 ```
 
 ## Reports
@@ -181,9 +170,9 @@ npm run test:e2e
 
 ## Contributing
 
-- All new tests must use a fixture (`ui`, `api`, `db`, or `auth`).
-- Tag every test with one of `@smoke @regression @ui @api @db @e2e
-  @negative @security @accessibility`.
+- All new tests must use a fixture (`api`, `db`, or `auth`).
+- Tag every test with one of `@smoke @regression @api @db @security
+  @negative`.
 - Never hardcode prices or balances.
 - Never add tests that touch production mutating endpoints. Gate them
   with `requireLocalOrTestnet()`.
